@@ -7,12 +7,13 @@ function App() {
 
   const editorRef = useRef(null);
   const handleEditorDidMount = (editor, monaco) => {
-    console.log('EditorDidMount', editor);
+    //console.log('EditorDidMount', editor);
     editorRef.current = editor;
   }
   const monaco = useMonaco();
 
-  const [comment, setComment] = useState('Test');
+  const [output, setOutput] = useState('Test');
+  const [comment, setComment] = useState('');
 
   const handleClick = async () => {
 
@@ -35,7 +36,8 @@ function App() {
       console.log(editorRef.current.getValue());
       console.log(JSON.stringify(result));
 
-      setComment(result.out);
+      setOutput(result.out);
+      setComment("Congratulations! You have completed the lesson!");
     } catch (err) {
       console.log('error');
     }
@@ -43,6 +45,7 @@ function App() {
 
   return (
     <div className="App">
+      <p>Lesson 1: Print "Hello World"</p>
         <Editor
           defaultValue=""
           height="85vh"
@@ -50,7 +53,8 @@ function App() {
           onMount={handleEditorDidMount}
           />
         <button onClick={handleClick}>Send</button>
-        <p>{comment}</p>
+        <p>{output}</p>
+        <p style={{color: 'green'}}>{comment}</p>
     </div>
   );
 }
