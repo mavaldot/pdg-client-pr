@@ -5,13 +5,14 @@ import Editor, {useMonaco} from '@monaco-editor/react';
 
 function App() {
 
-  // const editorRef = useRef(null);
-  // const handleEditorDidMount = (editor, monaco) => {
-  //   editorRef.current = editor;
-  // }
+  const editorRef = useRef(null);
+  const handleEditorDidMount = (editor, monaco) => {
+    console.log('EditorDidMount', editor);
+    editorRef.current = editor;
+  }
   const monaco = useMonaco();
 
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState('Test');
 
   const handleClick = async () => {
 
@@ -22,7 +23,7 @@ function App() {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({language: 'cpp', text: 'hello'}),
+        body: JSON.stringify({language: 'cpp', text: editorRef.current.getValue()}),
       });
 
       if (!res.ok) {
@@ -31,12 +32,10 @@ function App() {
 
       const result = await res.json();
       console.log("Wassup");
-      console.log(monaco);
+      console.log(editorRef.current.getValue());
       console.log(JSON.stringify(result));
 
-      
-
-      setComment(result);
+      setComment(result.out);
     } catch (err) {
       console.log('error');
     }
@@ -45,11 +44,13 @@ function App() {
   return (
     <div className="App">
         <Editor
-
+          defaultValue=""
           height="85vh"
           language="cpp"
+          onMount={handleEditorDidMount}
           />
         <button onClick={handleClick}>Send</button>
+        <p>{comment}</p>
     </div>
   );
 }
